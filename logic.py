@@ -364,7 +364,7 @@ def get_votes_by_day():
     if len(full) > 0:
         full = full.reindex(pd.date_range(min(full.index),
                                             max(full.index)), fill_value=0)
-    return [{'count':v, 'day':_js_time(k)} for k,v in full.items()]
+    return [{'count':int(v), 'day':_js_time(k)} for k,v in full.items()]
 
 def coverage_by_age():
     q = '''SELECT COUNT(*) as total,
@@ -381,8 +381,8 @@ def coverage_by_age():
     result = {votes:series for votes, series in df.items()}
     rv = []
     for key, series in result.items():
-        rv.append({'key':key, 
-            'values': [{'week':_js_time(k), 'votes':v}
+        rv.append({'key':int(key), 
+            'values': [{'week':_js_time(k), 'votes':int(v)}
                         for k,v in series.items()]})
     return rv
 
