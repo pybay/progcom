@@ -51,7 +51,7 @@ def execute(*args, **kwargs):
 
 def fetchone(*args, **kwargs):
     result = _e.execute(*args, **kwargs)
-    T = build_tuple(result.keys())
+    T = build_tuple(list(result.keys()))
     result = result.fetchone()
     if not result:
         return None
@@ -59,7 +59,7 @@ def fetchone(*args, **kwargs):
 
 def fetchall(*args, **kwargs):
     result = _e.execute(*args, **kwargs)
-    T = build_tuple(result.keys())
+    T = build_tuple(list(result.keys()))
     rv = []
     for row in result.fetchall():
         rv.append(T(*row))
@@ -76,7 +76,7 @@ def _mangle_pw(pw, salt=None):
     if not salt:
         salt = bcrypt.gensalt(rounds=_SALT_ROUNDS)
     else:
-        salt = salt.encode('utf-8')
+        salt = bytes.fromhex(salt[2:])
     return bcrypt.hashpw(pw.encode('utf-8'), salt)
 
 def add_user(email, display_name, pw):
@@ -101,7 +101,9 @@ def check_pw(email_address, pw):
     if not result:
         l('check_pw_bad_email', email=email_address)
         return None
-    if _mangle_pw(pw, result.pw) == result.pw:
+    salt = bytes.fromhex(result.pw[2:])
+    print(f"Password hash: {_mangle_pw(pw, result.pw)} and pw {salt}")
+    if _mangle_pw(pw, result.pw) == salt:
         l('check_pw_ok', email=email_address)
         return result.id
     l('check_pw_bad', email=email_address)
@@ -150,7 +152,7 @@ def _clean_proposal(raw):
                                                 raw['author_emails']))
     del raw['author_names']
     del raw['author_emails']
-    keys, values = zip(*raw.items())
+    keys, values = list(zip(*list(raw.items())))
     T = build_tuple(keys)
     return T(*values)
 
@@ -164,7 +166,7 @@ def get_proposal(id):
 
 def add_proposal(data):
     data = data.copy()
-    emails, names = zip(*((x['email'], x['name']) for x in data['authors']))
+    emails, names = list(zip(*((x['email'], x['name']) for x in data['authors'])))
     del data['authors']
 
     keys = ('id', 'description', 'duration', 'audience',
@@ -225,7 +227,7 @@ def add_standard(s):
     return scalar(q, s)
 
 def _clean_vote(vote):
-    return vote._replace(scores={int(k):v for k,v in vote.scores.items()}) 
+    return vote._replace(scores={int(k):v for k,v in list(vote.scores.items())}) 
 
 def vote(voter, proposal, scores, nominate=False):
     l('vote', uid=voter, id=proposal, scores=scores, nominate=nominate)
@@ -234,7 +236,7 @@ def vote(voter, proposal, scores, nominate=False):
 
     if set(scores.keys()) != set(x.id for x in get_standards()):
         return None
-    for v in scores.values():
+    for v in list(scores.values()):
         if not 0 <= v <= 2:
             return None
 
@@ -315,19 +317,19 @@ def scored_proposals():
     batch_ids = {v.proposal:v.batch_id for v in votes}
     """
     for v in votes:
-        scores[v.proposal].extend(v.scores.values())
+        scores[v.proposal].extend(list(v.scores.values()))
         if v.nominate:
-            nom_green[v.proposal].extend(2 for _ in v.scores.values())
+            nom_green[v.proposal].extend(2 for _ in list(v.scores.values()))
             greenness[v.proposal].append(1.0)
         else:
-            nom_green[v.proposal].extend(v.scores.values())
-            greenness[v.proposal].append(sum(1.0 for x in v.scores.values()
+            nom_green[v.proposal].extend(list(v.scores.values()))
+            greenness[v.proposal].append(sum(1.0 for x in list(v.scores.values())
                                             if x == 2)
-                                                /(1.0*len(v.scores.values())))
+                                                /(1.0*len(list(v.scores.values()))))
         nominations[v.proposal] += 1 if v.nominate else 0
     rv = []
 
-    for k,v in scores.items():
+    for k,v in list(scores.items()):
         proposal = proposals_by_id[k]
         rv.append({'id':k, 'score':_score_weight_average(v),
             'nom_is_green':_score_weight_average(nom_green[k]),
@@ -359,9 +361,10 @@ def get_votes_by_day():
     results = {x.day.date().isoformat():x.count for x in fetchall(q)}
     full = pd.Series(results)
     full.index = pd.DatetimeIndex(full.index)
-    full = full.reindex(pd.date_range(min(full.index),
-                                        max(full.index)), fill_value=0)
-    return [{'count':v, 'day':_js_time(k)} for k,v in full.iteritems()]
+    if len(full) > 0:
+        full = full.reindex(pd.date_range(min(full.index),
+                                            max(full.index)), fill_value=0)
+    return [{'count':v, 'day':_js_time(k)} for k,v in full.items()]
 
 def coverage_by_age():
     q = '''SELECT COUNT(*) as total,
@@ -375,12 +378,12 @@ def coverage_by_age():
     df = pd.DataFrame(result).fillna(0)
     df.index = pd.DatetimeIndex(df.index)
 
-    result = {votes:series for votes, series in df.iteritems()}
+    result = {votes:series for votes, series in df.items()}
     rv = []
-    for key, series in result.iteritems():
+    for key, series in result.items():
         rv.append({'key':key, 
             'values': [{'week':_js_time(k), 'votes':v}
-                        for k,v in series.iteritems()]})
+                        for k,v in series.items()]})
     return rv
 
 def added_last_week():
@@ -410,7 +413,7 @@ def active_discussions():
 def nomination_density():
     q = '''SELECT count(proposal) FROM votes 
             WHERE nominate=TRUE GROUP BY proposal'''
-    rv = [x for x in Counter([x.count for x in fetchall(q)]).items() ]
+    rv = [x for x in list(Counter([x.count for x in fetchall(q)]).items()) ]
     rv.sort(key=lambda x:-x[0])
     return rv
 
@@ -481,7 +484,7 @@ def raw_list_groups():
     coverage = get_batch_coverage()
     for g in rv:
         g['skip_consensus'] = coverage.get(g['id'], {}).get(None)
-        items = [v for k,v in coverage.get(g['id'], {}).items()
+        items = [v for k,v in list(coverage.get(g['id'], {}).items())
                                             if k != None and v != 0]
         g['talk_consensus'] = sorted(items, reverse=True)
     return rv
@@ -578,11 +581,11 @@ def get_batch_coverage():
                 groups[vote.batchgroup][id] = 0
             groups[vote.batchgroup][id] += 1
 
-    for bg, batch in groups.iteritems():
+    for bg, batch in groups.items():
         total = voter_count[bg]
         if not total:
             continue
-        batch.update({k:int(100*float(v)/total) for k,v in batch.iteritems()})
+        batch.update({k:int(100*float(v)/total) for k,v in batch.items()})
     return groups
 
 def get_my_pycon(user):
@@ -704,7 +707,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
     if feedback:
         full_proposal = get_proposal(proposal)
         email = _JINJA.get_template('email/feedback_notice.txt')
-        for to, key in generate_author_keys(proposal).items():
+        for to, key in list(generate_author_keys(proposal).items()):
             url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
             edit_url = 'https://us.pycon.org/2017/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body, 
@@ -858,7 +861,7 @@ def email_new_user_pending(email, name):
         ]
     }
 
-    _SENDGRID.client.mail.send.post(request_body=msg)
+    # _SENDGRID.client.mail.send.post(request_body=msg)
  
 def send_weekly_update():
     body = _JINJA.get_template('email/weekly_email.txt')
@@ -896,22 +899,22 @@ Experimental Topic Grouping
 
 
 #Installing NLTK and downloading everything is a trial.
-_NLTK_ENGLISH_STOPWORDS = set([u'i', u'me', u'my', u'myself', u'we', u'our',
-u'ours', u'ourselves', u'you', u'your', u'yours', u'yourself', u'yourselves',
-u'he', u'him', u'his', u'himself', u'she', u'her', u'hers', u'herself', u'it',
-u'its', u'itself', u'they', u'them', u'their', u'theirs', u'themselves',
-u'what', u'which', u'who', u'whom', u'this', u'that', u'these', u'those',
-u'am', u'is', u'are', u'was', u'were', u'be', u'been', u'being', u'have',
-u'has', u'had', u'having', u'do', u'does', u'did', u'doing', u'a', u'an',
-u'the', u'and', u'but', u'if', u'or', u'because', u'as', u'until', u'while',
-u'of', u'at', u'by', u'for', u'with', u'about', u'against', u'between',
-u'into', u'through', u'during', u'before', u'after', u'above', u'below', u'to',
-u'from', u'up', u'down', u'in', u'out', u'on', u'off', u'over', u'under',
-u'again', u'further', u'then', u'once', u'here', u'there', u'when', u'where',
-u'why', u'how', u'all', u'any', u'both', u'each', u'few', u'more', u'most',
-u'other', u'some', u'such', u'no', u'nor', u'not', u'only', u'own', u'same',
-u'so', u'than', u'too', u'very', u's', u't', u'can', u'will', u'just', u'don',
-u'should', u'now'] + ['www', 'youtube', 'com', 'google', 'python', 'http',
+_NLTK_ENGLISH_STOPWORDS = set(['i', 'me', 'my', 'myself', 'we', 'our',
+'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves',
+'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it',
+'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves',
+'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those',
+'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have',
+'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an',
+'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while',
+'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between',
+'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to',
+'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under',
+'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where',
+'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most',
+'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same',
+'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don',
+'should', 'now'] + ['www', 'youtube', 'com', 'google', 'python', 'http',
 'talk', 'https', 'programming', 'markdown', 'mins', 'min'])
 
 def _get_words(s):
@@ -926,14 +929,14 @@ def _get_raw_docs():
     rv = {}
     all_words = Counter()
     for row in raw_documents:
-        rv[row.id] = _get_words(' '.join(v for k,v in row.data.items() 
+        rv[row.id] = _get_words(' '.join(v for k,v in list(row.data.items()) 
                                                 if k not in ignore_keys))
         all_words.update(set(rv[row.id]))
 
-    useful_words = set(k for k,v in all_words.items() if v > 1)
+    useful_words = set(k for k,v in list(all_words.items()) if v > 1)
 
-    ids, words = zip(*{k:[x for x in v if x in useful_words]
-                                for k,v in rv.iteritems()}.items())
+    ids, words = list(zip(*list({k:[x for x in v if x in useful_words]
+                                for k,v in rv.items()}.items())))
     return ids, words
 
 def get_proposals_auto_grouped(topics_count=100, threshold=.5):
@@ -956,7 +959,7 @@ def get_proposals_auto_grouped(topics_count=100, threshold=.5):
 
     results = []
     groups = {}
-    for root, children in neighbors.items():
+    for root, children in list(neighbors.items()):
         target = groups.get(root, None)
         if not target:
             target = set()
@@ -1005,10 +1008,10 @@ _ROOM_SCHEDULES = json.loads(os.environ['ROOM_SCHEDULES'])
 def build_schedule():
     q = '''INSERT INTO schedules (day, room, time, duration)
             VALUES (%s, %s, %s, %s)'''
-    for room, room_type in _ROOMS.items():
+    for room, room_type in list(_ROOMS.items()):
         schedule = _ROOM_SCHEDULES[str(room_type)]
         for day, slots in enumerate(schedule):
-            for when, length in slots.items():
+            for when, length in list(slots.items()):
                 execute(q, day, room, when, length)
 
 def set_schedule(proposal, slot):
@@ -1060,7 +1063,7 @@ def send_emails():
             if not email or '@' not in email:
                 continue
             if (p.id, email) in already_sent:
-                print 'ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)
+                print(('ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)))
                 continue
             if not p.accepted:
                 text = decline.render(name=name, title=p.data['title'])
@@ -1068,7 +1071,7 @@ def send_emails():
                     "personalizations": [
                         {
                             "to": [{"email": email}],
-                            "subject": u'PyCon 2017: Proposal Decision -- '+p.data['title'],
+                            "subject": 'PyCon 2017: Proposal Decision -- '+p.data['title'],
                         }
                     ],
                     "from": {
@@ -1083,7 +1086,7 @@ def send_emails():
                     ]
                 }
 
-                print _SENDGRID.client.mail.send.post(request_body=msg).body
+                print((_SENDGRID.client.mail.send.post(request_body=msg).body))
                 declined +=1
                 continue
             q = '''INSERT INTO confirmations (proposal, email)
@@ -1096,7 +1099,7 @@ def send_emails():
                 "personalizations": [
                     {
                         "to": [{"email": email}],
-                        "subject": u'PyCon 2017: Talk Acceptance -- '+p.data['title'],
+                        "subject": 'PyCon 2017: Talk Acceptance -- '+p.data['title'],
                     }
                 ],
                 "from": {
@@ -1111,8 +1114,8 @@ def send_emails():
                 ]
             }
 
-            print _SENDGRID.client.mail.send.post(request_body=msg).body
+            print((_SENDGRID.client.mail.send.post(request_body=msg).body))
 
             acceptance +=1
-    print 'Declined: {}'.format(declined)
-    print 'Accepted: {}'.format(acceptance)
+    print('Declined: {}'.format(declined))
+    print('Accepted: {}'.format(acceptance))

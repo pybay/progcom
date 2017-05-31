@@ -24,8 +24,8 @@ def transact():
     e.execute(sql)   
 
 def test_pw():
-    pw = [u'blah blah blah', 'blah blah blah',
-            u"\u2603", 'Blah Blah Blah']
+    pw = ['blah blah blah', 'blah blah blah',
+            "\u2603", 'Blah Blah Blah']
     for p in pw:
         s = l._mangle_pw(p)
         assert s
@@ -33,13 +33,13 @@ def test_pw():
 
 def test_user_basics():
     for n in range(20):
-        assert l.add_user(u'{}@example.com'.format(n), u'Name {}'.format(n),
-                            u'pw{}'.format(n))
+        assert l.add_user('{}@example.com'.format(n), 'Name {}'.format(n),
+                            'pw{}'.format(n))
 
 
-    email = u'ned@example.com'
-    name = u'Ned Jackson Lovely'
-    pw = u'password'
+    email = 'ned@example.com'
+    name = 'Ned Jackson Lovely'
+    pw = 'password'
 
     assert not l.check_pw(email, pw)
 
@@ -62,7 +62,7 @@ def test_user_basics():
     assert l.check_pw(email.upper(), pw)
     assert not l.check_pw(email, pw.upper())
 
-    pw2 = u'\u2603'
+    pw2 = '\u2603'
     l.change_pw(uid, pw2)
 
     assert not l.check_pw(email, pw)

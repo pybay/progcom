@@ -11,7 +11,7 @@ def main(out):
         writer = csv.writer(csvfile)
         writer.writerow(keys)
         for row in l.fetchall(q):
-            writer.writerow(list(unicode(getattr(row, k)).encode('utf-8') for k in keys))
+            writer.writerow(list(str(getattr(row, k)).encode('utf-8') for k in keys))
 
 if __name__ == "__main__":
     main(sys.argv[1])

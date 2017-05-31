@@ -25,7 +25,7 @@ app.register_blueprint(bp_admin, url_prefix='/admin')
 
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app)
-    print 'Sentry'
+    print('Sentry')
 
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
 app.config.THIS_IS_BATCH = THIS_IS_BATCH
@@ -40,15 +40,15 @@ _OBSERVER_EMAILS = set(json.loads(os.environ['OBSERVER_EMAILS']))
 app.config.OBSERVER_EMAILS = _OBSERVER_EMAILS
 
 if THIS_IS_BATCH:
-    print 'THIS IS BATCH'
+    print('THIS IS BATCH')
 else:
-    print 'This is Screening!'
+    print('This is Screening!')
 
 @app.template_filter('date')
 def date_filter(d):
     if not d:
         return ''
-    if isinstance(d, (str, unicode)):
+    if isinstance(d, str):
         d = dateutil.parser.parse(d)
     return d.strftime('%B %-d, %-I:%M %p')
 
