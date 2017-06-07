@@ -172,16 +172,9 @@ def add_proposal(data):
     emails, names = list(zip(*((x['email'], x['name']) for x in data['authors'])))
     del data['authors']
 
-    keys = ('id', 'description', 'duration', 'audience',
-                'abstract', 'recording_release', 'notes', 'title', 'outline',)
+    keys = ('id', 'description', 'abstract', 'title')
 
     cleaned_data = {k:data[k] for k in keys}
-
-    """
-    print 'Missing:', set(keys) - set(data.keys())
-    print 'Extra:', set(data.keys()) - set(keys)
-    """
-
 
     q = 'SELECT * FROM proposals WHERE id=%s'
     proposal = fetchone(q, data['id'])
