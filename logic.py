@@ -102,7 +102,10 @@ def check_pw(email_address, pw):
         l('check_pw_bad_email', email=email_address)
         return None
     salt = bytes.fromhex(result.pw[2:])
-    print(f"Password hash: {_mangle_pw(pw, result.pw)} and pw {salt}")
+    print("Password hash: {mangled_pw} and pw {salt}".format(
+        mangled_pw=_mangle_pw(pw, result.pw),
+        salt=salt
+    ))
     if _mangle_pw(pw, result.pw) == salt:
         l('check_pw_ok', email=email_address)
         return result.id
@@ -236,7 +239,7 @@ def vote(voter, proposal, scores, nominate=False):
 
     if set(scores.keys()) != set(x.id for x in get_standards()):
         return None
-    for v in list(scores.values()):
+    for v in scores.values():
         if not 0 <= v <= 2:
             return None
 
@@ -319,13 +322,12 @@ def scored_proposals():
     for v in votes:
         scores[v.proposal].extend(list(v.scores.values()))
         if v.nominate:
-            nom_green[v.proposal].extend(2 for _ in list(v.scores.values()))
+            nom_green[v.proposal].extend(2 for _ in v.scores.values())
             greenness[v.proposal].append(1.0)
         else:
             nom_green[v.proposal].extend(list(v.scores.values()))
-            greenness[v.proposal].append(sum(1.0 for x in list(v.scores.values())
-                                            if x == 2)
-                                                /(1.0*len(list(v.scores.values()))))
+            greenness[v.proposal].append(sum(1.0 for x in v.scores.values()
+                                         if x == 2) / (1.0*len(list(v.scores.values()))))
         nominations[v.proposal] += 1 if v.nominate else 0
     rv = []
 
