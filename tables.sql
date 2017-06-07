@@ -1,8 +1,8 @@
 CREATE TABLE users (
     id              BIGSERIAL PRIMARY KEY,
     email           VARCHAR(254) NOT NULL,
-    display_name    VARCHAR(80),
-    pw              VARCHAR(80),
+    display_name    VARCHAR(256),
+    pw              VARCHAR(256),
     created_on      TIMESTAMP WITH TIME ZONE DEFAULT now(),
     approved_on     TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );

@@ -22,9 +22,9 @@ def api_call(uri):
     body = ''
 
     timestamp = timegm(datetime.now(tz=pytz.UTC).timetuple())
-    base_string = unicode(''.join((
+    base_string = str(''.join((
         API_SECRET,
-        unicode(timestamp),
+        str(timestamp),
         method.upper(),
         uri,
         body,
@@ -38,7 +38,7 @@ def api_call(uri):
     url = 'http://{}{}'.format(API_HOST, uri)
     try:
         return requests.get(url, headers=headers).json()
-    except JSONDecodeError, RequestException:
+    except JSONDecodeError as RequestException:
         sys.exit(1)
 
 """
