@@ -17,14 +17,27 @@ API_KEY = os.environ['PYCON_API_KEY']
 API_SECRET = os.environ['PYCON_API_SECRET']
 API_HOST = os.environ['PYCON_API_HOST']
 
+PYBAY_API_TOKEN = "test"
+API_TOKEN_PATH = '/home/pybay/api_token.txt'
+
+if os.path.exists(API_TOKEN_PATH):
+    with open(API_TOKEN_PATH) as f:
+        token = f.read().strip()
+        PYBAY_API_TOKEN = token
+
+
 def api_call(api_suffix):
-    return requests.get("http://localhost:8000/api/{}".format(api_suffix)).json()
-    # return requests.get("http://pybay.com/api/{}".format(api_suffix)).json()
+    return requests.get(
+        "http://localhost:8000/api/{}".format(api_suffix),
+        params={'token': PYBAY_API_TOKEN},
+    ).json()
+
 
 def fetch_ids():
     raw = api_call('undecided_proposals')
     rv = [x['id'] for x in raw['data']]
     return list(set(rv + l.get_all_proposal_ids()))
+
 
 def fetch_talk(id):
     rv = api_call('proposals/{}/'.format(id))
