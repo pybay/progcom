@@ -17,46 +17,30 @@ API_KEY = os.environ['PYCON_API_KEY']
 API_SECRET = os.environ['PYCON_API_SECRET']
 API_HOST = os.environ['PYCON_API_HOST']
 
-def api_call(uri):
-    method = 'GET'
-    body = ''
+PYBAY_API_TOKEN = "test"
+API_TOKEN_PATH = '/home/pybay/api_token.txt'
 
-    timestamp = timegm(datetime.now(tz=pytz.UTC).timetuple())
-    base_string = str(''.join((
-        API_SECRET,
-        str(timestamp),
-        method.upper(),
-        uri,
-        body,
-        )))
+if os.path.exists(API_TOKEN_PATH):
+    with open(API_TOKEN_PATH) as f:
+        token = f.read().strip()
+        PYBAY_API_TOKEN = token
 
-    headers = {
-            'X-API-Key': str(API_KEY),
-            'X-API-Signature': str(sha1(base_string.encode('utf-8')).hexdigest()),
-            'X-API-Timestamp': str(timestamp),
-            }
-    url = 'http://{}{}'.format(API_HOST, uri)
-    try:
-        return requests.get(url, headers=headers).json()
-    except JSONDecodeError as RequestException:
-        sys.exit(1)
 
-"""
-TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
-                  1566, 1568, 1569, 1570, 1571, 1572, 1573, 1576, 1577, 1579, 1580,
-                  1581, 1582, 1583, 1584, 1585, 1586, 1587, 1590, 2057, 2134,
-                  2135, 2136, 2143, 2144, 2145, 2210]
-"""
-TALK_IDS_FORCE = []
+def api_call(api_suffix):
+    return requests.get(
+        "http://localhost:8000/api/{}".format(api_suffix),
+        params={'token': PYBAY_API_TOKEN},
+    ).json()
+
 
 def fetch_ids():
-    raw = api_call('/2017/pycon_api/proposals/?type=talk&limit=5000&status=undecided')
-    #print len(raw['data'])
+    raw = api_call('undecided_proposals')
     rv = [x['id'] for x in raw['data']]
-    return list(set(TALK_IDS_FORCE + rv + l.get_all_proposal_ids()))
+    return list(set(rv + l.get_all_proposal_ids()))
+
 
 def fetch_talk(id):
-    rv = api_call('/2017/pycon_api/proposals/{}/'.format(id))
+    rv = api_call('proposals/{}/'.format(id))
     if not rv or 'data' not in rv:
         return {}
     rv = rv['data']
@@ -74,11 +58,5 @@ def main():
             l.add_proposal(proposal)
 
 
-raven_client = Client(os.environ['SENTRY_DSN'])
 if __name__ == '__main__':
-    try:
-        main()
-    except:
-        raven_client.captureException()
-        sys.exit(1)
-
+    main()
