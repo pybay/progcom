@@ -85,6 +85,7 @@ def add_user(email, display_name, pw):
     try:
         id = scalar(q, email, display_name, _mangle_pw(pw))
         l('add_user', email=email, display_name=display_name, uid=id)
+        approve_user(id)
     except IntegrityError:
         l('add_user_dupe', email=email, display_name=display_name)
         return -1
