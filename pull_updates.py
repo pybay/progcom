@@ -27,7 +27,7 @@ if os.path.exists(API_TOKEN_PATH):
 
 
 def api_call(api_suffix):
-    return requests.get(
+    result = requests.get(
         "http://pybay.com/api/{}".format(api_suffix),
         params={'token': PYBAY_API_TOKEN},
     )
