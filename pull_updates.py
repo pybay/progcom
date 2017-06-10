@@ -30,13 +30,16 @@ def api_call(api_suffix):
     return requests.get(
         "http://pybay.com/api/{}".format(api_suffix),
         params={'token': PYBAY_API_TOKEN},
-    ).json()
+    )
+    result = result.json()
+    return result
 
 
 def fetch_ids():
     raw = api_call('undecided_proposals')
     rv = [x['id'] for x in raw['data']]
-    return list(set(rv + l.get_all_proposal_ids()))
+    # return list(set(rv + l.get_all_proposal_ids()))
+    return rv
 
 
 def fetch_talk(id):
@@ -52,7 +55,7 @@ def fetch_talk(id):
 
 def main():
     for id in fetch_ids():
-        #print 'FETCHING {}'.format(id)
+        print('FETCHING {}'.format(id))
         proposal = fetch_talk(id)
         if proposal:
             l.add_proposal(proposal)

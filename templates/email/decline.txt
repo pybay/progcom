@@ -1,10 +1,10 @@
 Dear {{name}},
 
-Thank you very much for your PyCon 2017 talk proposal,
+Thank you very much for your PyBay 2017 talk proposal,
 "{{title}}".
 
 Unfortunately, your talk was not one of the ones selected to appear at
-PyCon 2017.
+PyBay 2017.
 
 Each year brings more talk submissions than the year before, and this
 year was no exception. Both the quantity and the quality of proposals
@@ -12,12 +12,12 @@ we received were extraordinary. We only have 95 spaces in the schedule,
 and we had to make many hard choices.
 
 We'd like to have a collection of past proposals we can use in the
-future to help potential PyCon speakers out. If you are amenable
+future to help potential PyBay speakers out. If you are amenable
 to us publicly sharing your proposal, please reply to this email and
 let me know! We will work with you to make sure we anonymize your
 proposal properly.
 
-I hope you still decide to attend PyCon! It's an amazing conference,
+I hope you still decide to attend PyBay! It's an amazing conference,
 and we still have several venues in which you could deliver your
 material. Lightning talks are quick, five-minute talks on any topic,
 and open spaces provide dedicated rooms for informal, unscheduled
@@ -27,18 +27,18 @@ Many subjects that aren't good fits for formal, scheduled talks are
 excellent subjects for open spaces! If you have a passion for your topic,
 then scheduling and hosting an open space is a great way to connect with
 others who share your interest. You can learn more about open spaces on
-the PyCon website, https://us.pycon.org/2017/events/open-spaces/
+the PyBay website, https://PyBay.com/2017/events/open-spaces/
 
 If you plan to come, you should register at
-https://us.pycon.org/2017/registration/ as soon as possible. We have
+https://us.PyBay.org/2017/registration/ as soon as possible. We have
 a limited number of tickets, and we expect to sell out. Waiting to buy
 tickets means you might not be able to come!
 
 If you have any other questions, comments, or feedback, please feel
 free to contact me (njl@njl.us), or the conference chair, Brandon Rhodes
-(pycon.brandon@gmail.com).
+(PyBay@gmail.com).
 
-On behalf of the PyCon staff, I want to thank you again for your
+On behalf of the PyBay staff, I want to thank you again for your
 submission. You made our job of picking talks very hard, and the
 conference will be better for it.
 
@@ -47,5 +47,5 @@ I hope to see you in Portland!
 
 
 Ned Jackson Lovely
-Program Chair, PyCon 2017
+Program Chair, PyBay 2017
 njl@njl.us

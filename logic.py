@@ -173,7 +173,7 @@ def add_proposal(data):
     emails, names = list(zip(*((x['email'], x['name']) for x in data['authors'])))
     del data['authors']
 
-    keys = ('id', 'description', 'abstract', 'title')
+    keys = ('id', 'description', 'abstract', 'title', "description", "abstract", "additional_notes", "title", "audience_level", "category", "what_will_attendees_learn")
 
     cleaned_data = {k:data[k] for k in keys}
 

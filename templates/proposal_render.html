@@ -37,16 +37,28 @@
         <p>
         {{version.description|markdown}}
         </p>
+        <h3>Abstract</h3>
+        <p>
+        {{version.abstract|markdown}}
+        </p>
         <h3>Audience</h3>
         <p>
-        {{version.audience}}
+        {{version.audience_level}}
         </p>
-        <h3>Outline</h3>
+        <h3>Category</h3>
+        <p>
+        {{version.category}}
+        </p>
+        <h3>What will attendees learn</h3>
+        <p>
+        {{version.what_will_attendees_learn}}
+        </p>
+<!--         <h3>Outline</h3>
         <p>
         <pre style="white-space:pre-wrap;border:0;background:none;">
         {{version.outline}}
         </pre>
-        </p>
+        </p> -->
         {% if not anonymize %}
         <h3>Additional Notes</h3>
         <p>
