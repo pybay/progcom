@@ -56,10 +56,12 @@ def fetch_talk(id):
 def main():
     for id in fetch_ids():
         print('FETCHING {}'.format(id))
-        proposal = fetch_talk(id)
-        if proposal:
-            l.add_proposal(proposal)
-
+        try:
+            proposal = fetch_talk(id)
+            if proposal:
+                l.add_proposal(proposal)
+        except Exception as e:
+            print('ERROR FETCHING {}: {}'.format(id, repr(e)))
 
 if __name__ == '__main__':
     main()
