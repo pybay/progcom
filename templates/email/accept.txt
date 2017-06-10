@@ -2,7 +2,7 @@ Dear {{name}},
 
 Congratulations! Your talk,
 "{{title}}"
-has been accepted to PyCon 2017!
+has been accepted to PyBay 2017!
 
 Please read through this email carefully for your next steps.
 
@@ -19,54 +19,47 @@ you can no longer give this talk, please contact me right away so I
 can find a replacement. If you need to make changes to your title or
 abstract, please contact me.
 
-We haven't yet completed the schedule, so we don't yet know whether
-you've been allocated a 30 or a 45 minute time slot. We'll be
-announcing the schedule shortly, so please stay tuned.
+Majority of you will have a 40 mins time slot with up-to 15 mins of Q&A, 
+a few of you will have a 25 mins slot with Q&A. If you'd like a shorter 
+talk slot, please let me know right the way. We'll be announcing the 
+schedule shortly, so please stay tuned.
 
 If you have particular scheduling requirements (if you plan to come to
-PyCon late or leave early, for example), please let me know today or
+PyBay late or leave early, for example), please let me know today or
 tomorrow, so that I can take your requirements into account.
 
-We'd like to have a collection of past proposals we can use in the
-future to help potential PyCon speakers out. If you are amenable
-to us publicly sharing your proposal, please reply to this email and let
-me know!
-
 You should register for the conference at
-https://us.pycon.org/2017/registration/
-as soon as possible; please don't delay, tickets do sell out!
+https://www.pybay.com/registration/
+as soon as possible.
 
-Unlike many conferences, PyCon doesn't give free tickets to speakers,
-nor do we cover travel expenses. We do this because PyCon is a
+Unlike many conferences, PyBay doesn't give free tickets to speakers,
+nor do we cover travel expenses. We do this because PyBay is a
 grassroots, community-organized conference and our core mission is to
 keep costs low. Thus, we ask everybody who can afford to pay to do so.
 However, we recognize that buying tickets and paying for travel can
 represent a financial hardship to some, and we really want to see you
-at PyCon! If you can't afford a ticket and/or travel expenses,
-please apply for financial aid.
+at PyBay! If you can't afford a ticket and/or travel expenses,
+please apply for scholarships.
 
 More information about financial aid can be found at
-https://us.pycon.org/2017/financial-assistance/
+https://www.pybay.com/scholarships/
 
-If you're applying for financial aid, make sure to mention that you're
-an accepted speaker.  Please contact the financial aid team at
-pycon-aid@python.org if you have any questions.
-
-If you need assistance with visas or immigration documents, please
-contact our registration team (pycon2017@cteusa.com).
+If you're applying for scholarships, make sure to mention that you're
+an accepted speaker.  Please contact the scholarships team at
+scholarships@pybay.com if you have any questions.
 
 If you have any other questions, comments, or feedback, please feel
-free to contact me (njl@njl.us), or the conference chair, Brandon Rhodes
-(pycon.brandon@gmail.com).
+free to contact the conference chair, Grace Law
+(grace@pybay.com).
 
-On behalf of the PyCon staff, I want to thank you for your submission.
-We're really looking forward to seeing you at the conference; PyCon 2017
-promises to be the best PyCon yet, and that's because of our amazing
+On behalf of the PyBay staff, I want to thank you for your submission.
+We're really looking forward to seeing you at the conference; PyBay 2017
+promises to be the best PyBay yet, and that's because of our amazing
 speakers. We're thrilled that you're one of them.
 
-See you in Portland!
+See you in San Francisco!
 
 
-Ned Jackson Lovely
-Program Chair, PyCon 2017
-njl@njl.us
+Daniel Mizyrycki
+Program Coordinator, PyBay 2017
+
