@@ -231,11 +231,11 @@ def vote(voter, proposal, scores, nominate=False):
     if not get_user(voter).approved:
         return None
 
-    if set(scores.keys()) != set(x.id for x in get_standards()):
-        return None
-    for v in scores.values():
-        if not 0 <= v <= 2:
-            return None
+    # if set(scores.keys()) != set(x.id for x in get_standards()):
+    #     return None
+    # for v in scores.values():
+    #     if not 0 <= v <= 2:
+    #         return None
 
     q = '''INSERT INTO votes (voter, proposal, scores, nominate)
             VALUES (%s, %s, %s, %s) RETURNING id'''

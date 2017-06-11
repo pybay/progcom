@@ -77,7 +77,65 @@
                 <h3 class="panel-title">This Proposal...</h3>
             </div>
             <form method="POST" action="vote/" id="vote-form">
-                  <table class="table">
+                
+                <p class="help-block">
+                  Choose the most appropriate:  
+                </p>
+<div class="radio" >
+
+<div class="radio">
+  <input type="radio"  name="standard-0" value="10" select {% if existing_vote
+                                    and existing_vote.scores[0] == 10 %}
+                            checked  
+                            {%endif%}  > 
+                            If I can only make it to 5 talks this year, I want this to be one of the 5.<br>
+  </div>
+<div class="radio">
+  <input type="radio"  name="standard-0" value="5"  {% if existing_vote
+                                    and existing_vote.scores[0] == 5 %}
+                            checked {%endif%} 
+                            > I am pretty sure I have seen this talk before and it is great.<br>
+  </div>
+<div class="radio">
+  <input type="radio"  name="standard-0" value="-5"  {% if existing_vote
+                                    and existing_vote.scores[0] == -5 %}
+                            checked {%endif%} 
+                            > I am pretty sure I have seen this talk before and it is OK, I’d be curious to see what else is there.<br>
+  </div>
+<div class="radio">
+  <input type="radio"  name="standard-0" value="-10"  {% if existing_vote
+                                    and existing_vote.scores[0] == -10 %}
+                            checked {%endif%} 
+                            > I am pretty sure I have seen this talk before and let’s pass.<br>
+  </div>
+<div class="radio">
+  <input type="radio"  name="standard-0" value="0"  {% if existing_vote
+                                    and existing_vote.scores[0] == 0 %}
+                            checked {%endif%} 
+                            >N/A.<br>
+  </div>
+<!-- <div class="radio">
+  <input type="radio"  name="standard-0" value="2"  {% if existing_vote
+                                    and existing_vote.scores[0] == 2 %}
+                            checked {%endif%} 
+                            > I can be interested in this depending on the speaker.<br>
+  </div>
+<div class="radio">
+  <input type="radio"  name="standard-0" value="0"  {% if existing_vote
+                                    and existing_vote.scores[0] == 0 %}
+                            checked {%endif%} 
+                            > The information provided (and subsequent correspondence) did not provide enough information for me to be excited.<br>
+  </div> 
+<div class="radio">
+  <input type="radio"  name="standard-0" value="-2"  {% if existing_vote
+                                    and existing_vote.scores[0] == 2 %}
+                            checked {%endif%} 
+                            > The abstract is written poorly, I have doubts they will present well enough.<br>
+  </div> -->
+  <br>
+                </div>
+  
+                  <table class="table table-striped">
                 {% for s in standards %}
                 <tr>
                     <td>

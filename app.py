@@ -339,6 +339,7 @@ def vote(id):
     scores = {}
     for s in standards:
         scores[s.id] = int(request.values['standard-{}'.format(s.id)])
+    scores['0'] = int(request.values['standard-0'])
     nominate = request.values.get('nominate', '0') == '1'
     l.vote(request.user.id, id, scores, nominate)
     return render_template('user_vote_snippet.html', 
