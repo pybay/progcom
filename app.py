@@ -137,7 +137,7 @@ def new_user_post():
         flash('An account with that email address already exists')
         return redirect(url_for('login'))
     l.email_new_user_pending(email, name)
-    flash('You will be able to log in after your account is approved!')
+    # flash('You will be able to log in after your account is approved!')
     return redirect(url_for('login'))
 
 @app.route('/user/logout/')
