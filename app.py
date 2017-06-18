@@ -137,7 +137,7 @@ def new_user_post():
         flash('An account with that email address already exists')
         return redirect(url_for('login'))
     l.email_new_user_pending(email, name)
-    flash('You will be able to log in after your account is approved!')
+    # flash('You will be able to log in after your account is approved!')
     return redirect(url_for('login'))
 
 @app.route('/user/logout/')
@@ -339,6 +339,7 @@ def vote(id):
     scores = {}
     for s in standards:
         scores[s.id] = int(request.values['standard-{}'.format(s.id)])
+    scores['0'] = int(request.values['standard-0'])
     nominate = request.values.get('nominate', '0') == '1'
     l.vote(request.user.id, id, scores, nominate)
     return render_template('user_vote_snippet.html', 

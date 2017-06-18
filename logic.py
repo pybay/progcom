@@ -85,6 +85,7 @@ def add_user(email, display_name, pw):
     try:
         id = scalar(q, email, display_name, _mangle_pw(pw))
         l('add_user', email=email, display_name=display_name, uid=id)
+        approve_user(id)
     except IntegrityError:
         l('add_user_dupe', email=email, display_name=display_name)
         return -1
@@ -172,7 +173,7 @@ def add_proposal(data):
     emails, names = list(zip(*((x['email'], x['name']) for x in data['authors'])))
     del data['authors']
 
-    keys = ('id', 'description', 'abstract', 'title')
+    keys = ('id', 'description', 'abstract', 'title', "description", "abstract", "additional_notes", "title", "audience_level", "category", "what_will_attendees_learn")
 
     cleaned_data = {k:data[k] for k in keys}
 
@@ -230,11 +231,11 @@ def vote(voter, proposal, scores, nominate=False):
     if not get_user(voter).approved:
         return None
 
-    if set(scores.keys()) != set(x.id for x in get_standards()):
-        return None
-    for v in scores.values():
-        if not 0 <= v <= 2:
-            return None
+    # if set(scores.keys()) != set(x.id for x in get_standards()):
+    #     return None
+    # for v in scores.values():
+    #     if not 0 <= v <= 2:
+    #         return None
 
     q = '''INSERT INTO votes (voter, proposal, scores, nominate)
             VALUES (%s, %s, %s, %s) RETURNING id'''
