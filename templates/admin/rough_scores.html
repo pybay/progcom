@@ -17,6 +17,9 @@
             <th data-column="title">Proposal</th>
             <th data-column="batchgroup">Batch Group</th>
             <th data-column="auto_group">Auto Group</th>
+            <th data-column="speaker">Speaker</th>
+            <th data-column="category">Category</th>
+            <th data-column="audience">Audience</th>
             <th data-column="score" data-reverse="1">Rough Score</th>
             <th data-column="nom_is_green" data-reverse="1">Nomination
                                             Green Equivalent</th>
@@ -38,6 +41,9 @@
         <td><a href="/screening/<%=e.id%>/"><%=e.title%></a> (#<%=e.id%>) </td>
         <td class="batchgroup" data-id="<%=e.id%>"><%=e.batchgroup%></td>
         <td><%=e.auto_group%></td>
+        <td><%=e.speaker%></td>
+        <td><%=e.category%></td>
+        <td><%=e.audience%></td>
         <td><%=e.score%></td>
         <td><%=e.nom_is_green%></td>
         <td><%=e.greenness%></td>
