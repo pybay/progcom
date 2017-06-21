@@ -295,7 +295,10 @@ def _score_weight_average(v):
     return int(100*sum(v)/(2.0*len(v)))
 
 def scored_proposals():
-    q = '''SELECT scores, nominate, proposal, proposals.data->>'title' AS title,
+    q = '''SELECT scores, nominate, votes.proposal, proposals.data->>'title' AS title,
+                    proposals.data->>'audience_level' AS audience,
+                    proposals.data->>'category' AS category,
+                    proposals.author_names AS author_names,
                     proposals.accepted,
                     batchgroups.name as batchgroup,
                     batchgroups.id as batch_id
@@ -331,6 +334,9 @@ def scored_proposals():
             'nom_is_green':_score_weight_average(nom_green[k]),
             'greenness':int(100*sum(greenness[k])/len(greenness[k])),
         'nominations': nominations[k],
+        'speaker': proposal.author_names,
+        'category': proposal.category,
+        'audience': proposal.audience,
         'title':proposal.title,
         'batch_id': proposal.batch_id,
         'batchgroup':proposal.batchgroup,
