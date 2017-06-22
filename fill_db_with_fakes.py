@@ -42,7 +42,8 @@ def main():
                 'abstract': ipsum(1),
                 'outline': ipsum(5)+"\n[test](http://www.google.com/)\n",
                 'additional_notes': ipsum(1),
-                'additional_requirements': ipsum(1)}
+                'additional_requirements': ipsum(1),
+                'what_will_attendees_learn': ipsum(1)}
         l.add_proposal(data)
         proposal_ids.append(prop_id)
 
