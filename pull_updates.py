@@ -38,7 +38,6 @@ def api_call(api_suffix):
 def fetch_ids():
     raw = api_call('undecided_proposals')
     rv = [x['id'] for x in raw['data']]
-    # return list(set(rv + l.get_all_proposal_ids()))
     return rv
 
 
@@ -51,6 +50,14 @@ def fetch_talk(id):
     del rv['speakers']
     rv.update(rv['details'])
     del rv['details']
+
+    # NOTE: Since we changed the field `what_attendees_will_learn` to
+    # `what_attendees_will_learn` in PyBay (https://github.com/pybay/pybay/pull/224)
+    # This will case issues in progcom. To avoid this issue, let's rename the field
+    # before it gets ingested by Progcom
+    what_attendees_will_learn = rv.pop('what_will_attendees_learn')
+    rv['what_attendees_will_learn'] = what_attendees_will_learn
+
     return rv
 
 def main():
