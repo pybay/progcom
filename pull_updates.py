@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+import logging
 import os
+
 from hashlib import sha1
 from calendar import timegm
 from datetime import datetime
@@ -19,6 +21,13 @@ API_HOST = os.environ['PYCON_API_HOST']
 
 PYBAY_API_TOKEN = "test"
 API_TOKEN_PATH = '/home/pybay/api_token.txt'
+
+
+log_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'logging.conf')
+logging.config.fileConfig(log_path)
+log = logging.getLogger("worker")
+
 
 if os.path.exists(API_TOKEN_PATH):
     with open(API_TOKEN_PATH) as f:
@@ -62,13 +71,13 @@ def fetch_talk(id):
 
 def main():
     for id in fetch_ids():
-        print('FETCHING {}'.format(id))
+        log.info('FETCHING {}'.format(id))
         try:
             proposal = fetch_talk(id)
             if proposal:
                 l.add_proposal(proposal)
         except Exception as e:
-            print('ERROR FETCHING {}: {}'.format(id, repr(e)))
+            log.error('ERROR FETCHING {}: {}'.format(id, repr(e)))
 
 if __name__ == '__main__':
     main()
