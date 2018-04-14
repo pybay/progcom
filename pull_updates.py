@@ -52,11 +52,11 @@ def fetch_talk(id):
     del rv['details']
 
     # NOTE: Since we changed the field `what_attendees_will_learn` to
-    # `what_attendees_will_learn` in PyBay (https://github.com/pybay/pybay/pull/224)
+    # `what_will_attendees_learn` in PyBay (https://github.com/pybay/pybay/pull/224)
     # This will case issues in progcom. To avoid this issue, let's rename the field
     # before it gets ingested by Progcom
-    what_attendees_will_learn = rv.pop('what_will_attendees_learn')
-    rv['what_attendees_will_learn'] = what_attendees_will_learn
+    what_attendees_will_learn = rv.pop('what_attendees_will_learn')
+    rv['what_will_attendees_learn'] = what_attendees_will_learn
 
     return rv
 
