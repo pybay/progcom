@@ -53,10 +53,12 @@
         <p>
         {{version.what_will_attendees_learn}}
         </p>
+        {% if not anonymize %}
         <h3>Speaker and talk history</h3>
         <p>
         {{version.speaker_and_talk_history}}
         </p>
+        {% endif %}
 <!--         <h3>Outline</h3>
         <p>
         <pre style="white-space:pre-wrap;border:0;background:none;">
