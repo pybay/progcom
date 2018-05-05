@@ -185,6 +185,7 @@ def add_proposal(data):
             "category",
             "what_will_attendees_learn",
             "speaker_and_talk_history",
+            "talk_length",
             )
 
     cleaned_data = {k:data[k] for k in keys}
